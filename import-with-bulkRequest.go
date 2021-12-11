@@ -100,9 +100,17 @@ func addSubField(app *kintone.App, column *Column, col string, table *SubRecord)
 		if field != nil {
 			table.Fields[column.Code] = field
 		}
+	} else if column.Type == "UNKNOWN" {
+		if config.Warning {
+			fmt.Printf("[UNKNOWN:%s] ", column.Code)
+		}
 	} else {
 		field := getField(column.Type, col)
-		if field != nil {
+		if field == nil {
+			if config.Warning {
+				fmt.Printf("[NOT SUPPORT:%s] ", column.Code)
+			}
+		} else {
 			table.Fields[column.Code] = field
 		}
 	}
@@ -220,11 +228,19 @@ func importFromCSV(app *kintone.App, _reader io.Reader) error {
 							if field != nil {
 								record[column.Code] = field
 							}
+						} else if column.Type == "UNKNOWN" {
+							if config.Warning {
+								fmt.Printf("[UNKNOWN:%s] ", column.Code)
+							}
 						} else {
 							if column.Code == keyField && col == "" {
 							} else {
 								field := getField(column.Type, col)
-								if field != nil {
+								if field == nil {
+									if config.Warning {
+										fmt.Printf("[NOT SUPPORT%s] ", column.Code)
+									}
+								} else {
 									record[column.Code] = field
 								}
 							}
@@ -260,7 +276,7 @@ func importFromCSV(app *kintone.App, _reader io.Reader) error {
 			}
 
 			if hasId && keyField != "" {
-				log.Fatalln("The \"$id\" field and update key fields cannot be specified together in CSV import file.");
+				log.Fatalln("The \"$id\" field and update key fields cannot be specified together in CSV import file.")
 			}
 
 			_, hasKeyField := record[keyField]

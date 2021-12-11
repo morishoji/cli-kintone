@@ -49,6 +49,7 @@ type Configure struct {
 	FilePath          string   `short:"f" default:"" description:"Input file path"`
 	FileDir           string   `short:"b" default:"" description:"Attachment file directory"`
 	DeleteAll         bool     `short:"D" description:"Delete records before insert. You can specify the deleting record condition by option \"-q\""`
+	Warning           bool     `short:"W" long:"warn" description:"Warn ignored columns when importing"`
 	Line              uint64   `short:"l" default:"1" description:"Position index of data in the input file"`
 	Version           bool     `short:"v" long:"version" description:"Version of cli-kintone"`
 }
